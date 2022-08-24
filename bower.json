@@ -1,0 +1,21 @@
+{
+  "name": "units",
+  "authors": [
+    "STDin <diego.rodriguez.gomez@stdin.cl>"
+  ],
+  "description": "CSS Components for web apps",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "components-font-awesome": "^6.1.2",
+    "jquery": "^3.6.0"
+  }
+}

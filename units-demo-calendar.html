@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="unit-app">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Units Demo</title>
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="bower_components/components-font-awesome/css/all.min.css" />
+	<link rel="stylesheet" type="text/css" href="dist/units.css" />
+	<script type="text/javascript" src="dist/units.js"></script>
+	<script type="text/javascript" src="dist/units.prototypes.js"></script>
+</head>
+<body>
+	<div class="unit-navigation">
+		<div class="unit-logo">
+			<i></i>
+			<div>
+				<b>Sistem Label</b>
+				<span>AppName</span>
+			</div>
+		</div>
+		<div class="unit-menu">
+			<a href="#"><i></i> <b>Home</b></a>
+			<a href="#"><i></i> <b>Reports</b></a>
+			<a href="#"><i></i> <b>User</b></a>
+			<a href="#"><i></i> <b>Settings</b></a>
+		</div>
+		<a href="#" class="unit-icon">
+			<i class="fa fa-user-circle"></i>
+			<label>1</label>
+		</a>
+	</div>
+
+	<div class="unit-head search-bar">
+		<div class="unit-heading">
+			<label>Briefs</label>
+		</div>
+		<form class="unit-search">
+			<div class="unit-input"> 
+				<select name="st_id">
+					<option value="1">En Desarrollo</option>
+					<option value="1">Opcion B</option>
+					<option value="1">Opcion C</option>
+				</select>
+				<label></label>
+				<input type="hidden" name="p" value="1" />
+			</div>
+			<div class="unit-input unit-main"> 
+				<i class="fa fa-search"></i>
+				<input type="text" name="q" value="" placeholder="Buscar brief" />
+			</div>
+			<div class="unit-input unit-primary"> 
+				<input type="submit" value="Buscar" />
+			</div>
+		</form>
+		<div class="unit-actions unit-actions-inline"> 
+			<label></label>
+			<div>
+				<a href="#" class="unit-constructive">Nuevo brief<i class="fa fa-plus"></i></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="unit-columns">
+
+		<div class="unit-column unit-sidebar">
+			<div class="unit-head">
+				<div class="unit-tabs">
+					<a href="#info" id="info"><i class="fa fa-info-circle"></i>Info</a>
+					<a href="#target" id="target" class="active"><i class="fa fa-crown"></i>Target</a>
+					<a href="#details" id="details"><i class="fa fa-list"></i>Detalles</a>
+					<a href="#team" id="team"><i class="fa fa-users"></i>Equipo</a>
+					<a href="#dates" id="dates"><i class="fa fa-calendar"></i>Fechas</a>
+				</div>
+			</div>
+			<div class="unit-body">
+				<div class="unit-scroll">
+					<div class="unit-wrap">
+						<div class="unit-tabs unit-tabs-v unit-tabs-prominent">
+							<a href="#info" id="info" class="active"><i class="fa fa-info-circle"></i>Info</a>
+							<a href="#target" id="target"><i class="fa fa-crown"></i>Target</a>
+							<a href="#details" id="details"><i class="fa fa-list"></i>Detalles</a>
+							<a href="#team" id="team"><i class="fa fa-users"></i>Equipo</a>
+							<a href="#dates" id="dates"><i class="fa fa-calendar"></i>Fechas</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="unit-foot">
+			</div>
+		</div>
+
+		<div class="unit-column">
+			<div class="unit-head">
+				<div class="unit-heading">
+					<i class="fa fa-user-circle"></i>
+					<label>Section heading</label>
+				</div>
+				<div class="unit-actions">
+					<label>Opciones</label>
+					<div>
+						<a href="#" class="create">Create</a>
+						<a href="#" class="delete">Delete</a>
+						<a href="#" class="update">Update</a>
+						<a href="#" class="detail">Detail</a>
+					</div>
+				</div>
+			</div>
+			<div class="unit-body">
+				<div class="unit-scroll">
+					<div class="unit-wrap">
+						<div class="unit-row">
+							<div class="unit-head">
+								<div class="unit-heading">
+									<i class="fa fa-user-circle"></i>
+									<label>Row component</label>
+								</div>
+								<div class="unit-actions">
+									<label>Opciones</label>
+									<div>
+										<a href="#" class="create">Create</a>
+										<a href="#" class="delete">Delete</a>
+										<a href="#" class="update">Update</a>
+										<a href="#" class="detail">Detail</a>
+									</div>
+								</div>
+							</div>
+							<div class="unit-wrap">
+								<div class="unit-user">
+									<div class="unit-user-picture"></div>
+									<div class="unit-user-data">
+										<strong>Diego Rodriguez Gomez</strong>
+										<span>diego.rodriguez.gomez@gmail.com</span>
+									</div>
+									<div class="unit-actions">
+										<label>Opciones</label>
+										<div>
+											<a href="#" class="create">Create</a>
+											<a href="#" class="delete">Delete</a>
+											<a href="#" class="update">Update</a>
+											<a href="#" class="detail">Detail</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+			<div class="unit-foot">
+
+				<div class="unit-pages">
+					<a href="#">Anterior</a>
+					<div>
+						1 de 1
+						<select>
+							<option value="1">Ir a página 1</option>
+						</select>
+					</div>
+					<a href="#" class="disabled">Siguiente</a>
+				</div>
+
+				<div class="unit-actions unit-actions-top">
+					<label>Opciones</label>
+					<div>
+						<a href="#" class="unit-primary">Create<i class="fa fa-plus"></i></a>
+						<a href="#" class="delete">Delete</a>
+						<a href="#" class="update">Update</a>
+						<a href="#" class="detail">Detail</a>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	<div class="unit-drawing">
+		<div class="unit-column">
+			<div class="unit-head">
+				<div class="unit-heading">
+					<i class="fa fa-user-circle"></i>
+					<label>Perfil</label>
+				</div>
+				<a href="#" class="unit-icon">
+					<i class="fa fa-times"></i>
+				</a>
+			</div> 
+			<div class="unit-head">
+				<div class="unit-tabs">
+					<a href="#info" id="info"><i class="fa fa-info-circle"></i>Info</a>
+					<a href="#target" id="target"><i class="fa fa-crown"></i>Target</a>
+					<a href="#details" id="details"><i class="fa fa-list"></i>Detalles</a>
+					<a href="#team" id="team"><i class="fa fa-users"></i>Equipo</a>
+					<a href="#dates" id="dates"><i class="fa fa-calendar"></i>Fechas</a>
+				</div>
+			</div>
+			<div class="unit-body">
+				<div class="unit-scroll">
+					<div class="unit-wrap">
+
+						<div class="unit-row">
+							<div class="unit-head">
+								<div class="unit-heading">
+									<i class="fa fa-user-circle"></i>
+									<label>Row component</label>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="unit-foot">
+				<div class="unit-actions unit-actions-top">
+					<label>Opciones</label>
+					<div>
+						<a href="#" class="create">Create</a>
+						<a href="#" class="delete">Delete</a>
+						<a href="#" class="update">Update</a>
+						<a href="#" class="detail">Detail</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
