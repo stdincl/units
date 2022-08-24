@@ -4,11 +4,17 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>Units Demo</title>
+	<!-- dependences -->
 	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="bower_components/components-font-awesome/css/all.min.css" />
+
+	<!-- unit plugins -->
 	<link rel="stylesheet" type="text/css" href="dist/units.css" />
 	<script type="text/javascript" src="dist/units.js"></script>
 	<script type="text/javascript" src="dist/units.prototypes.js"></script>
+
+	<!-- demo customs -->
+	<script type="text/javascript" src="demo/custom.js"></script>
 </head>
 <body>
 	<div class="unit-navigation">
@@ -20,13 +26,12 @@
 			</div>
 		</div>
 		<div class="unit-menu">
-			<a href="/home/"><i></i> <b>Inicio</b></a>
-			<a href="/briefs/"><i></i> <b>Briefs</b></a>
-			<a href="/reports/"><i></i> <b>Informes</b></a>
-			<a href="/calendar/"><i></i> <b>Calendario</b></a>
-			<a href="/settings/"><i></i> <b>Configuración</b></a>
+			<a href="#"><i></i> <b>Home</b></a>
+			<a href="#"><i></i> <b>Reports</b></a>
+			<a href="#"><i></i> <b>User</b></a>
+			<a href="#"><i></i> <b>Settings</b></a>
 		</div>
-		<a href="#" class="unit-icon">
+		<a href="#" class="unit-icon" id="custom-user-profile-button">
 			<i class="fa fa-user-circle"></i>
 			<label>1</label>
 		</a>
@@ -178,37 +183,39 @@
 
 	</div>
 
-	<div class="unit-drawing -open">
+	<div class="unit-drawing" id="custom-user-profile-view">
 		<div class="unit-column">
 			<div class="unit-head">
 				<div class="unit-heading">
-					<i class="fa fa-user-circle"></i>Perfil
+					<i class="fa fa-user-circle"></i>
+					<label>Perfil</label>
 				</div>
-				<a href="#" class="unit-icon">
+				<a href="#" class="unit-icon" id="custom-user-profile-close-button">
 					<i class="fa fa-times"></i>
 				</a>
 			</div> 
 			<div class="unit-head">
 				<div class="unit-tabs">
-					<a href="#info" id="info"><i class="fa fa-info-circle"></i>Info</a>
-					<a href="#target" id="target"><i class="fa fa-users-crown"></i>Target</a>
+					<a href="#info" id="info"><i class="fa fa-info-circle"></i>Info</a> 
 					<a href="#details" id="details"><i class="fa fa-list"></i>Detalles</a>
 					<a href="#team" id="team"><i class="fa fa-users"></i>Equipo</a>
 					<a href="#dates" id="dates"><i class="fa fa-calendar"></i>Fechas</a>
 				</div>
 			</div>
 			<div class="unit-body">
-				<div class="unit-body-scroll">
+				<div class="unit-scroll">
+					<div class="unit-wrap">
 
-					<div class="unit-row">
-						<div class="unit-head">
-							<div class="unit-heading">
-								<i class="fa fa-user-circle"></i>
-								<label>Row component</label>
+						<div class="unit-row">
+							<div class="unit-head">
+								<div class="unit-heading">
+									<i class="fa fa-user-circle"></i>
+									<label>Row component</label>
+								</div>
 							</div>
 						</div>
-					</div>
 
+					</div>
 				</div>
 			</div>
 			<div class="unit-foot">

@@ -99,8 +99,9 @@ html,body,*,form,form * {
 		transition:0.3s ease;
 		opacity:1;
 		pointer-events:all;
+		z-index:1000000000000;
 	}
-		.unit-modal.unit-modal-hidden {
+		.unit-modal.unit-disabled {
 			opacity:0;
 			pointer-events:none;
 		}
