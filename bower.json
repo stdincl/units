@@ -11,6 +11,10 @@
     "dist/themes/night.css",
     "dist/themes/day.css"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/stdincl/units.git"
+  },
   "license": "MIT",
   "homepage": "",
   "ignore": [
