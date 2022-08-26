@@ -4,7 +4,13 @@
     "STDin <diego.rodriguez.gomez@stdin.cl>"
   ],
   "description": "CSS Components for web apps",
-  "main": "",
+  "main": [
+    "dist/units.css",
+    "dist/units.js",
+    "dist/units.prototypes.js",
+    "dist/themes/night.css",
+    "dist/themes/day.css"
+  ],
   "license": "MIT",
   "homepage": "",
   "ignore": [
