@@ -1,0 +1,28 @@
+{
+  "name": "units",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/stdincl/units/",
+  "author": "STDin <diego.rodriguez.gomez@stdin.cl>",
+  "license": "MIT",
+  "dependencies": {
+    "@chenfengyuan/datepicker": "^1.0.10",
+    "@editorjs/editorjs": "^2.25.0",
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "animate.css": "^4.1.1",
+    "gmap3": "^7.2.0",
+    "inputmask": "^5.0.7",
+    "jquery": "^3.6.0",
+    "jquery-maskmoney": "^3.0.2",
+    "jquery-ui": "^1.13.1",
+    "jquery.nicescroll": "^3.7.6",
+    "jquery.rut": "^1.1.2",
+    "moment": "^2.29.1",
+    "owl.carousel": "^2.3.4",
+    "protip": "^1.4.21",
+    "simplebar": "^5.3.6",
+    "socket.io-client": "^4.4.1",
+    "tablesorter": "^2.31.3",
+    "trumbowyg": "^2.25.1"
+  }
+}
