@@ -89,7 +89,78 @@ $.fn.unitUpdateListeners = function(data){
 $.fn.close = function(){
 	return this.trigger('unit-modal-close');
 };
-
+$.fn.bridge = function(path,options){
+	/* 
+		Options 
+			loader: bool : Shows loader
+			headers: {}
+		Events 
+			done: on result
+			error: on error 400 || 500
+			start: on request starts
+			end: on request ends
+			progress: on upload progress
+	*/
+	var settings = $.extend({
+		loader:true,
+		headers:{}
+	},options);
+	return $(this).on('submit',function(e){
+		e.preventDefault();
+		var data = new FormData(this);
+		if(settings.loader){
+			var loader = $.loader();
+		}
+		var requestPost = $.ajax({
+			type:'POST',
+			url:unit.server+'/bridge/'+path+'/',
+			data:data,
+			cache: false,
+		    contentType: false,
+		    processData: false,
+			beforeSend:(request)=>{
+			    request.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+				request.setRequestHeader('cache-control', 'max-age=0');
+				request.setRequestHeader('expires', '0');
+				request.setRequestHeader('expires', 'Tue, 01 Jan 1981 1:00:00 GMT');
+				request.setRequestHeader('pragma', 'no-cache');
+				Object.keys(unit.credentials).forEach((credentialKey)=>{
+					request.setRequestHeader('Auth',credentialKey+' ' + unit.credentials[credentialKey]);
+				});
+				Object.keys(settings.headers).forEach((headerKey)=>{
+					request.setRequestHeader('Auth',headerKey+' ' + settings.headers[headerKey]);
+				});
+			    request.withCredentials = 'true';
+			},
+			xhr:()=>{
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener('progress',(evt)=>{
+                    $(this).trigger('progress',((evt.loaded/evt.total)*100));
+                }, false);
+                return xhr;
+            },
+		}).done((response)=>{
+			$(this).trigger('done',[response]).trigger('end');
+		}).fail((response)=>{
+			if(!response.responseJSON){
+				response = {
+					responseJSON:{
+						error:'.service-unavailable',
+						error_code:$._('.service-unavailable')
+					}
+				};
+			}
+			$(this).trigger('error',[response.responseJSON.error,response.responseJSON.error_code]).trigger('end');
+		}).always(()=>{
+			if(settings.loader){
+				loader.remove();
+			}
+			$(this).trigger('end');
+		});
+		$(this).trigger('start');
+		return false;
+	});
+};
 $.fn.modal = function(options){
 	/* 
 		Events 
@@ -160,6 +231,8 @@ $.fn.window = function(options){
 };
 
 window.unit = window.unit?window.unit:{};
+window.unit.server = '';
+window.unit.credentials = {};
 window.unit.alert = function(options){
 	var settings = $.extend({
 		title:'Mensaje',
