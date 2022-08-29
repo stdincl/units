@@ -10,7 +10,7 @@ $.fn.fill = function(data){
 		f.find('select,[type=file]').trigger('update');
 	});
 };
-$.fn.unitUpdateListeners = function(data){
+$.fn.unitUpdateListeners = function(){
 	return this.each(function(i,f){
 		return $(f).on('update',function(){
 			var t = '&nbsp;';
