@@ -33,86 +33,20 @@ $.fn.unitUpdateListeners = function(){
 $.fn.close = function(){
 	return this.trigger('unit-modal-close');
 };
-$.fn.bridge = function(path,options){
+$.fn.bridge = function(){
 	/* 
 		Options 
-			loader: bool : Shows loader
-			headers: {}
+			...Units.options
 		Events 
-			done: on result
-			error: on error 400 || 500
-			start: on request starts
-			end: on request ends
-			progress: on upload progress
+			...Units.events
 	*/
-	var settings = $.extend({
-		loader:true,
-		headers:{}
-	},options);
-	return $(this).on('submit',function(e){
-		e.preventDefault();
-		var data = new FormData(this);
-		var hasFiles = false;
-		for(const value of data.values()){
-			if(value.name){
-				hasFiles = true;
-			}
-		}
-		if(settings.loader){
-			var loader = Units.loader();
-		}
-		var requestPost = $.ajax({
-			type:'POST',
-			url:Units.server+'/bridge/'+path+'/',
-			data:data,
-			cache: false,
-		    contentType: false,
-		    processData: false,
-			beforeSend:(request)=>{
-			    request.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
-				request.setRequestHeader('cache-control', 'max-age=0');
-				request.setRequestHeader('expires', '0');
-				request.setRequestHeader('expires', 'Tue, 01 Jan 1981 1:00:00 GMT');
-				request.setRequestHeader('pragma', 'no-cache');
-				Object.keys(Units.credentials).forEach((credentialKey)=>{
-					request.setRequestHeader('Auth',credentialKey+' ' + Units.credentials[credentialKey]);
-				});
-				Object.keys(settings.headers).forEach((headerKey)=>{
-					request.setRequestHeader('Auth',headerKey+' ' + settings.headers[headerKey]);
-				});
-			    request.withCredentials = 'true';
-			},
-			xhr:()=>{
-                var xhr = new window.XMLHttpRequest();
-                xhr.upload.addEventListener('progress',(evt)=>{
-                	var pct = ((evt.loaded/evt.total)*100);
-                    $(this).trigger('progress',pct);
-	                if(settings.loader&&hasFiles){
-	                	loader.trigger('progress',[pct]);
-					}
-                },false);
-                return xhr;
-            },
-		}).done((response)=>{
-			$(this).trigger('done',[response]).trigger('end');
-		}).fail((response)=>{
-			if(!response.responseJSON){
-				response = {
-					responseJSON:{
-						error:'.service-unavailable',
-						error_code:Units.translate('.service-unavailable')
-					}
-				};
-			}
-			$(this).trigger('error',[response.responseJSON.error,response.responseJSON.error_code]).trigger('end');
-		}).always(()=>{
-			if(settings.loader){
-				loader.remove();
-			}
-			$(this).trigger('end');
+	var args = arguments;
+	return this.each(function(i,f){
+		$(f).on('submit',function(e){
+			e.preventDefault(); 
+			Units.bridge.apply(this,args);
+			return false;
 		});
-		$(this).trigger('start');
-		return false;
 	});
 };
 $.fn.modal = function(options){
@@ -417,6 +351,89 @@ window.Units = {
 		c = (c+'').toString();
 		window.lang = window.lang?window.lang:{};
 		return (window.lang[c]?window.lang[c]:c).normalize();
+	},
+	bridge:function(path,data,options){
+		/* 
+			Options 
+				loader: bool : Shows loader
+				headers: {}
+			Events 
+				done: on result
+				error: on error 400 || 500
+				end: on request ends
+				progress: on upload progress
+		*/
+		var settings = $.extend({
+			loader:true,
+			headers:{}
+		},options);
+		data = (typeof data==='object' && !Array.isArray(data) && data!==null)?data:{};
+		var isSendedByForm = (typeof this).toLowerCase()!=='function';
+		var target = isSendedByForm?$(this):$('<div></div>');
+		var formDataCollector = isSendedByForm?new FormData(this):new FormData();
+		$.each(data,function(k,d){
+			formDataCollector.append(k,d);
+		});
+		data = formDataCollector;
+		var hasFiles = false;
+		for(const value of data.values()){
+			if(value.name){
+				hasFiles = true;
+			}
+		}
+		if(settings.loader){
+			var loader = Units.loader();
+		}
+		var requestPost = $.ajax({
+			type:'POST',
+			url:Units.server+'/bridge/'+path+'/',
+			data:data,
+			cache: false,
+		    contentType: false,
+		    processData: false,
+			beforeSend:(request)=>{
+			    request.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+				request.setRequestHeader('cache-control', 'max-age=0');
+				request.setRequestHeader('expires', '0');
+				request.setRequestHeader('expires', 'Tue, 01 Jan 1981 1:00:00 GMT');
+				request.setRequestHeader('pragma', 'no-cache');
+				Object.keys(Units.credentials).forEach((credentialKey)=>{
+					request.setRequestHeader('Auth',credentialKey+' ' + Units.credentials[credentialKey]);
+				});
+				Object.keys(settings.headers).forEach((headerKey)=>{
+					request.setRequestHeader('Auth',headerKey+' ' + settings.headers[headerKey]);
+				});
+			    request.withCredentials = 'true';
+			},
+			xhr:()=>{
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener('progress',(evt)=>{
+                	var pct = ((evt.loaded/evt.total)*100);
+                    target.trigger('progress',pct);
+	                if(settings.loader&&hasFiles){
+	                	loader.trigger('progress',[pct]);
+					}
+                },false);
+                return xhr;
+            },
+		}).done((response)=>{
+			target.trigger('done',[response]).trigger('end');
+		}).fail((response)=>{
+			if(!response.responseJSON){
+				response = {
+					responseJSON:{
+						error:'.service-unavailable',
+						error_code:Units.translate('.service-unavailable')
+					}
+				};
+			}
+			target.trigger('error',[response.responseJSON.error,response.responseJSON.error_code]).trigger('end');
+		}).always(()=>{
+			if(settings.loader){
+				loader.remove();
+			}
+		});
+		return target;
 	}
 };
 $(()=>{
