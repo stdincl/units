@@ -1,67 +1,11 @@
-$.extend({
-    bridgeURL:function(service,method){
-        var idfile = Math.ceil(Math.random()*1000000000000)+''+new Date().getTime()+''+Math.ceil(Math.random()*1000000000000);
-        return $.server+'/bridge/'+service+'/'+method+'/'+idfile+'.json';
-    },
-	moneyGlobal:function(n){
-		n = parseFloat(n);
-		var c = (n+0.0).toFixed(2).split('.')[1];
-			c = c=='00'?0:c.length;
-		return n.toFixed(c).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,').replaceAll(',','[*]').replaceAll('.',',').replaceAll('[*]','.');
-	},
-	money:function(n, c, d, t) {
-		var c = isNaN(c = Math.abs(c)) ? 0 : c,
-		d = d == undefined ? "," : d,
-		t = t == undefined ? "." : t,
-		s = n < 0 ? "-" : "",
-		i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-		j = (j = i.length) > 3 ? j % 3 : 0;
-		return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-	},
-	isMobile:function(){ 
-		return (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()));
-	},
-	option:function(value,text){
-		return $(['<option value="',value,'">',text,'</option>'].join(''));
-	},
-	location:function(href,code){ 
-		$.loader(code);
-		location.href = href;
-	},
-	reload:function(code){ 
-		$.loader(code);
-		location.reload();
-	},
-    loader:function(code,withProgress){
-      	var loader=$('<div class="io-loading animated aparison">'+(withProgress?'<div class="io-loading-progress"></div>':'')+'<b class="fa fa-circle-notch fa-spin fa-3x fa-fw"></b><span>'+(code?code:'')+'</span></div>').appendTo('body');
-      	return loader;
-    },
-    normal:function(m){
-    	if(m===0){return '0';}
-    	if(m===false){return 'false';}
-    	if(m===true){return 'true';}
-		return ((m?(m.replace?$('<div></div>').html(m.replace(/<br\s*\/?>/mg,"\n")).text():m):'')+'').toString();
-	},
-	_:function(c){
-		window.lang = window.lang?window.lang:{};
-		return $.normal(window.lang[c]?window.lang[c]:c);
-	}
-});
-
-
 $.fn.hasAttr = function(name) {  
 	return this.attr(name) !== undefined && this.attr(name) !== false;
-};
-$.fn.num = function(o){
-	var v = parseFloat($(this).val().replaceAll(',','.'));
-	v = isNaN(v)?0:v;
-	return v;
 };
 $.fn.fill = function(data){
 	return this.each(function(i,f){
 		f = $(f);
 		$.each(data,function(name,value){
-			f.find('[name='+name+']').val($.normal(value));
+			f.find('[name='+name+']').val((value).toString().normalize());
 		});
 		f.find('select,[type=file]').trigger('update');
 	});
@@ -108,12 +52,18 @@ $.fn.bridge = function(path,options){
 	return $(this).on('submit',function(e){
 		e.preventDefault();
 		var data = new FormData(this);
+		var hasFiles = false;
+		for(const value of data.values()){
+			if(value.name){
+				hasFiles = true;
+			}
+		}
 		if(settings.loader){
-			var loader = $.loader();
+			var loader = Units.loader();
 		}
 		var requestPost = $.ajax({
 			type:'POST',
-			url:unit.server+'/bridge/'+path+'/',
+			url:Units.server+'/bridge/'+path+'/',
 			data:data,
 			cache: false,
 		    contentType: false,
@@ -124,8 +74,8 @@ $.fn.bridge = function(path,options){
 				request.setRequestHeader('expires', '0');
 				request.setRequestHeader('expires', 'Tue, 01 Jan 1981 1:00:00 GMT');
 				request.setRequestHeader('pragma', 'no-cache');
-				Object.keys(unit.credentials).forEach((credentialKey)=>{
-					request.setRequestHeader('Auth',credentialKey+' ' + unit.credentials[credentialKey]);
+				Object.keys(Units.credentials).forEach((credentialKey)=>{
+					request.setRequestHeader('Auth',credentialKey+' ' + Units.credentials[credentialKey]);
 				});
 				Object.keys(settings.headers).forEach((headerKey)=>{
 					request.setRequestHeader('Auth',headerKey+' ' + settings.headers[headerKey]);
@@ -135,8 +85,12 @@ $.fn.bridge = function(path,options){
 			xhr:()=>{
                 var xhr = new window.XMLHttpRequest();
                 xhr.upload.addEventListener('progress',(evt)=>{
-                    $(this).trigger('progress',((evt.loaded/evt.total)*100));
-                }, false);
+                	var pct = ((evt.loaded/evt.total)*100);
+                    $(this).trigger('progress',pct);
+	                if(settings.loader&&hasFiles){
+	                	loader.trigger('update-progress',[pct]);
+					}
+                },false);
                 return xhr;
             },
 		}).done((response)=>{
@@ -146,7 +100,7 @@ $.fn.bridge = function(path,options){
 				response = {
 					responseJSON:{
 						error:'.service-unavailable',
-						error_code:$._('.service-unavailable')
+						error_code:Units.translate('.service-unavailable')
 					}
 				};
 			}
@@ -212,7 +166,7 @@ $.fn.window = function(options){
 			'<div class="unit-card">',
 				'<div class="unit-head">',
 					'<div class="unit-heading">',
-						'<label>',$._(settings.title),'</label>',
+						'<label>',Units.translate(settings.title),'</label>',
 					'</div>',
 					(settings.closable?'<a class="unit-icon unit-modal-close"><i class="fa fa-times"></i></a>':''),
 				'</div>',
@@ -229,197 +183,237 @@ $.fn.window = function(options){
 		return w;
 	});
 };
-
-window.unit = window.unit?window.unit:{};
-window.unit.server = '';
-window.unit.credentials = {};
-window.unit.alert = function(options){
-	var settings = $.extend({
-		title:'Mensaje',
-		message:''
-	},options);
-	/* 
-		confirm:Events 
-			close: on window closes (removed from DOM),
-			hide: on window is hidded (not removed from DOM),
-			show: on window is showed
-	*/
-	var w = [
-		'<div class="unit-card">',
-			'<div class="unit-head">',
-				'<div class="unit-heading">',
-					'<label>',$._(settings.title),'</label>',
-				'</div>',
-			'</div>',
-			'<div class="unit-body">',
-				'<div class="unit-wrap">',
-					'<p>',$._(settings.message).nl2br(),'</p>',
-				'</div>',
-			'</div>',
-			'<div class="unit-foot">', 
-				'<div class="unit-actions unit-actions-inline unit-small">',
-					'<div>',
-						'<a class="unit-primary unit-modal-close-button">Entendido</a>',
+window.Units = {
+	server:'',
+	credentials:{},
+	alert:function(options){
+		var settings = $.extend({
+			title:'Mensaje',
+			message:''
+		},options);
+		/* 
+			Options:
+				title
+				message
+			Events 
+				close: on window closes (removed from DOM),
+				hide: on window is hidded (not removed from DOM),
+				show: on window is showed
+		*/
+		var w = [
+			'<div class="unit-card">',
+				'<div class="unit-head">',
+					'<div class="unit-heading">',
+						'<label>',Units.translate(settings.title),'</label>',
 					'</div>',
-				'</div>',  
-			'</div>',
-		'</div>'
-	].$().modal();
-	w.find('.unit-modal-close-button').on('click',function(e){
-		e.preventDefault();
-		w.close();
-	});
-	return w;
-};
-window.unit.confirm = function(options){
-	/* 
-		confirm:Options
-			title : Window title : default 'Confirmar'
-			message : Window message : default ''
-			cancelIsDestructive : Cancel button causes destructive action : default false
-			cancelIsConstructive : Cancel button causes constructive action : default false
-			acceptIsDestructive : Accept button causes destructive action : default false
-			acceptIsConstructive : Accept button causes constructive action : default false
-		confirm:Events 
-			close: on window closes (removed from DOM),
-			hide: on window is hidded (not removed from DOM),
-			show: on window is showed
-			resolve: when message is canceled or canceled, boolean param is passed (e,accepted)=>{}
-			cancel: when message is canceled
-			accept: when message is accepted
-	*/
-	var settings = $.extend({
-		title:'Confirmar',
-		message:'',
-		acceptIsDestructive:false,
-		cancelIsDestructive:false,
-		acceptIsConstructive:false,
-		cancelIsConstructive:false
-	},options);
-	var cancelExtraClass = settings.cancelIsDestructive?'unit-destructive':(settings.cancelIsConstructive?'unit-constructive':'');
-	var acceptExtraClass = settings.acceptIsDestructive?'unit-destructive':(settings.acceptIsConstructive?'unit-constructive':' unit-primary');
-	var w = [
-		'<div class="unit-card">',
-			'<div class="unit-head">',
-				'<div class="unit-heading">',
-					'<label>',$._(settings.title),'</label>',
 				'</div>',
-			'</div>',
-			'<div class="unit-body">',
-				'<div class="unit-wrap">',
-					'<p>',$._(settings.message).nl2br(),'</p>',
+				'<div class="unit-body">',
+					'<div class="unit-wrap">',
+						'<p>',Units.translate(settings.message).nl2br(),'</p>',
+					'</div>',
 				'</div>',
-			'</div>',
-			'<div class="unit-foot">', 
-				'<div class="unit-actions unit-actions-inline unit-small">',
-					'<div>',
-						'<a class="unit-modal-accept-button ',acceptExtraClass,'">Aceptar</a>',
-					'</div>',
-				'</div>',  
-				'<div class="unit-actions unit-actions-inline unit-small">',
-					'<div>',
-						'<a class="unit-modal-cancel-button ',cancelExtraClass,'">Cancelar</a>',
-					'</div>',
-				'</div>',  
-			'</div>',
-		'</div>',
-	].$().modal();
-	w.find('.unit-modal-cancel-button').on('click',function(e){
-		e.preventDefault();
-		w.trigger('cancel').trigger('resolve',[false]).close();
-	});
-	w.find('.unit-modal-accept-button').on('click',function(e){
-		e.preventDefault();
-		w.trigger('accept').trigger('resolve',[true]).close();
-	});
-	return w;
-};
-
-window.unit.formInput = function(rowInputSettings){
-	var inputSettings = $.extend({
-		label:'',
-		type:'',
-		options:[], // {{value:1.text:text},...}
-		name:'',
-		value:'',
-		custom:'',
-		placeholder:''
-	},rowInputSettings);
-	if(inputSettings.type==''){
-		return [
-			'<div class="unit-input ',inputSettings.custom,'"></div>'
-		].$();
-	}
-
-	var formHtmlInput = '<input type="'+inputSettings.type+'" class="unit-input-component" />';
-	var requiresExtraLabel = false;
-	var requiresLabelLink = false;
-	switch(inputSettings.type){
-		case 'select':
-			formHtmlInput = '<select class="unit-input-component"></select>';
-			requiresExtraLabel = true;
-		break;
-		case 'button':
-			formHtmlInput = '<button class="unit-input-component"></button>';
-		break;
-		case 'textarea':
-			formHtmlInput = '<textarea class="unit-input-component"></textarea>';
-		break;
-		case 'file':
-			requiresExtraLabel = true;
-		break;
-		case 'checkbox':
-			requiresExtraLabel = true;
-			requiresLabelLink = true;
-		break;
-		case 'radio':
-			requiresExtraLabel = true;
-			requiresLabelLink = true;
-		break;
-	}
-	var formInput = [
-		'<div class="unit-input ',inputSettings.custom,'">',
-			(inputSettings.label!=''?('<label>'+inputSettings.label+'</label>'):''),
-			formHtmlInput,
-			(requiresExtraLabel?'<label class="unit-input-override-label"></label>':''),
-		'</div>'
-	].$();
-	if(inputSettings.type=='submit'){
-		formInput.addClass('unit-primary');
-	}
-	inputSettings.options.forEach((option)=>{
-		$.option(option.value,option.text).appendTo(formInput.find('select'));
-	});
-	formInput.find('.unit-input-component').attr({
-		'name':inputSettings.name,
-		'placeholder':inputSettings.placeholder,
-	}).val(inputSettings.value);
-	formInput.find('select,[type=file]').unitUpdateListeners();
-	if(requiresLabelLink){
-		var generationKey = 'unit-form-'+Date.now();
-		while($('#'+generationKey).length>0){
-			generationKey = 'unit-form-'+Date.now()+'-'+Math.round(Math.random()*1000000000);
-		}
-		formInput.find('.unit-input-component').attr('id',generationKey);
-		formInput.find('.unit-input-override-label').attr('for',generationKey).text(inputSettings.placeholder);
-	}
-	return formInput;
-};
-window.unit.form = function(){
-	let formRows = Array.from(arguments);
-	var unitForm = ['<div class="unit-form"></div>'].$();
-	formRows = Array.isArray(formRows)?formRows:[];
-	formRows.forEach((formRowInputs)=>{
-		var formRow = ['<div class="unit-form-row"></div>'].$();
-		formRowInputs.forEach((rowInputSettings)=>{
-			unit.formInput(rowInputSettings).appendTo(formRow);
+				'<div class="unit-foot">', 
+					'<div class="unit-actions unit-actions-inline unit-small">',
+						'<div>',
+							'<a class="unit-primary unit-modal-close-button">Entendido</a>',
+						'</div>',
+					'</div>',  
+				'</div>',
+			'</div>'
+		].$().modal();
+		w.find('.unit-modal-close-button').on('click',function(e){
+			e.preventDefault();
+			w.close();
 		});
-		formRow.appendTo(unitForm);
-	});
-	return unitForm;
+		return w;
+	},
+	confirm:function(options){
+		/* 
+			confirm:Options
+				title : Window title : default 'Confirmar'
+				message : Window message : default ''
+				cancelIsDestructive : Cancel button causes destructive action : default false
+				cancelIsConstructive : Cancel button causes constructive action : default false
+				acceptIsDestructive : Accept button causes destructive action : default false
+				acceptIsConstructive : Accept button causes constructive action : default false
+			confirm:Events 
+				close: on window closes (removed from DOM),
+				hide: on window is hidded (not removed from DOM),
+				show: on window is showed
+				resolve: when message is canceled or canceled, boolean param is passed (e,accepted)=>{}
+				cancel: when message is canceled
+				accept: when message is accepted
+		*/
+		var settings = $.extend({
+			title:'Confirmar',
+			message:'',
+			acceptIsDestructive:false,
+			cancelIsDestructive:false,
+			acceptIsConstructive:false,
+			cancelIsConstructive:false
+		},options);
+		var cancelExtraClass = settings.cancelIsDestructive?'unit-destructive':(settings.cancelIsConstructive?'unit-constructive':'');
+		var acceptExtraClass = settings.acceptIsDestructive?'unit-destructive':(settings.acceptIsConstructive?'unit-constructive':' unit-primary');
+		var w = [
+			'<div class="unit-card">',
+				'<div class="unit-head">',
+					'<div class="unit-heading">',
+						'<label>',Units.translate(settings.title),'</label>',
+					'</div>',
+				'</div>',
+				'<div class="unit-body">',
+					'<div class="unit-wrap">',
+						'<p>',Units.translate(settings.message).nl2br(),'</p>',
+					'</div>',
+				'</div>',
+				'<div class="unit-foot">', 
+					'<div class="unit-actions unit-actions-inline unit-small">',
+						'<div>',
+							'<a class="unit-modal-accept-button ',acceptExtraClass,'">Aceptar</a>',
+						'</div>',
+					'</div>',  
+					'<div class="unit-actions unit-actions-inline unit-small">',
+						'<div>',
+							'<a class="unit-modal-cancel-button ',cancelExtraClass,'">Cancelar</a>',
+						'</div>',
+					'</div>',  
+				'</div>',
+			'</div>',
+		].$().modal();
+		w.find('.unit-modal-cancel-button').on('click',function(e){
+			e.preventDefault();
+			w.trigger('cancel').trigger('resolve',[false]).close();
+		});
+		w.find('.unit-modal-accept-button').on('click',function(e){
+			e.preventDefault();
+			w.trigger('accept').trigger('resolve',[true]).close();
+		});
+		return w;
+	},
+	formInput:function(rowInputSettings){
+		var inputSettings = $.extend({
+			label:'',
+			type:'',
+			options:[], // {{value:1.text:text},...}
+			name:'',
+			value:'',
+			custom:'',
+			placeholder:''
+		},rowInputSettings);
+		if(inputSettings.type==''){
+			return [
+				'<div class="unit-input ',inputSettings.custom,'"></div>'
+			].$();
+		}
+
+		var formHtmlInput = '<input type="'+inputSettings.type+'" class="unit-input-component" />';
+		var requiresExtraLabel = false;
+		var requiresLabelLink = false;
+		switch(inputSettings.type){
+			case 'select':
+				formHtmlInput = '<select class="unit-input-component"></select>';
+				requiresExtraLabel = true;
+			break;
+			case 'button':
+				formHtmlInput = '<button class="unit-input-component"></button>';
+			break;
+			case 'textarea':
+				formHtmlInput = '<textarea class="unit-input-component"></textarea>';
+			break;
+			case 'file':
+				requiresExtraLabel = true;
+			break;
+			case 'checkbox':
+				requiresExtraLabel = true;
+				requiresLabelLink = true;
+			break;
+			case 'radio':
+				requiresExtraLabel = true;
+				requiresLabelLink = true;
+			break;
+		}
+		var formInput = [
+			'<div class="unit-input ',inputSettings.custom,'">',
+				(inputSettings.label!=''?('<label>'+inputSettings.label+'</label>'):''),
+				formHtmlInput,
+				(requiresExtraLabel?'<label class="unit-input-override-label"></label>':''),
+			'</div>'
+		].$();
+		if(inputSettings.type=='submit'){
+			formInput.addClass('unit-primary');
+		}
+		inputSettings.options.forEach((option)=>{
+			Units.option(option.value,option.text).appendTo(formInput.find('select'));
+		});
+		formInput.find('.unit-input-component').attr({
+			'name':inputSettings.name,
+			'placeholder':inputSettings.placeholder,
+		}).val(inputSettings.value);
+		formInput.find('select,[type=file]').unitUpdateListeners();
+		if(requiresLabelLink){
+			var generationKey = 'unit-form-'+Date.now();
+			while($('#'+generationKey).length>0){
+				generationKey = 'unit-form-'+Date.now()+'-'+Math.round(Math.random()*1000000000);
+			}
+			formInput.find('.unit-input-component').attr('id',generationKey);
+			formInput.find('.unit-input-override-label').attr('for',generationKey).text(inputSettings.placeholder);
+		}
+		return formInput;
+	},
+	form:function(){
+		let formRows = Array.from(arguments);
+		var unitForm = ['<div class="unit-form"></div>'].$();
+		formRows = Array.isArray(formRows)?formRows:[];
+		formRows.forEach((formRowInputs)=>{
+			var formRow = ['<div class="unit-form-row"></div>'].$();
+			formRowInputs.forEach((rowInputSettings)=>{
+				Units.formInput(rowInputSettings).appendTo(formRow);
+			});
+			formRow.appendTo(unitForm);
+		});
+		return unitForm;
+	},
+	moneyGlobal:function(n){
+		n = parseFloat(n);
+		var c = (n+0.0).toFixed(2).split('.')[1];
+			c = c=='00'?0:c.length;
+		return n.toFixed(c).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,').replaceAll(',','[*]').replaceAll('.',',').replaceAll('[*]','.');
+	},
+	money:function(n, c, d, t) {
+		var c = isNaN(c = Math.abs(c)) ? 0 : c,
+		d = d == undefined ? "," : d,
+		t = t == undefined ? "." : t,
+		s = n < 0 ? "-" : "",
+		i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+		j = (j = i.length) > 3 ? j % 3 : 0;
+		return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+	},
+	isMobile:function(){ 
+		return (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()));
+	},
+	option:function(value,text){
+		return ['<option value="',value,'">',text,'</option>'].$();
+	},
+	location:function(href,code){ 
+		Units.loader(code);
+		location.href = href;
+	},
+	reload:function(code){ 
+		Units.loader(code);
+		location.reload();
+	},
+    loader:function(code,withProgress){
+      	var loader=$('<div class="unit-loading">'+(withProgress?'<div class="unit-loading-progress"></div>':'')+'<b class="fa fa-circle-notch fa-spin fa-3x fa-fw"></b><span>'+(code?code:'')+'</span></div>').on('update-progress',function(e,progress){
+      		
+      	}).appendTo('body');
+      	return loader;
+    },
+	translate:function(c){
+		c = (c+'').toString();
+		window.lang = window.lang?window.lang:{};
+		return (window.lang[c]?window.lang[c]:c).normalize();
+	}
 };
-
-
 $(()=>{
 	$('.unit-input select,.unit-input [type=file]').unitUpdateListeners();
 });

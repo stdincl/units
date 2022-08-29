@@ -29,6 +29,12 @@ String.prototype.toURLFriendly = function(){
 String.prototype.getExtension = function(){ 
 	return (/(?:\.([^.]+))?$/).exec(this)[1];
 };
+String.prototype.normalize = function(){ 
+	if(this===0){return '0';}
+	if(this===false){return 'false';}
+	if(this===true){return 'true';}
+	return ((this?(this.replace?$('<div></div>').html(this.replace(/<br\s*\/?>/mg,"\n")).text():this):'')+'').toString();
+};
 Array.prototype.mapID = function(varName,property) {
     return varName + this.map(function(e){ return '['+e[property]+']'; }).join('');
 };
@@ -83,6 +89,9 @@ Array.prototype.slider = function(){
         pop.addClass('open');
     },10);
 };
+Array.prototype.normalize = function(){ 
+	return this.toString().normalize();
+};
 Number.prototype.replaceAll = function(search,replacement){
 	return (this.valueOf()+"").replaceAll(search,replacement);
 };
@@ -103,6 +112,9 @@ Number.prototype.toPercent = function(totalPercent,decimals){
 Number.prototype.toDate = function(){
 	return new Date(this.valueOf());
 };
+Number.prototype.normalize = function(){ 
+	return this.toString().normalize();
+};
 Date.prototype.toDate = function(){
 	return this.toDateString().toDate();
 };
@@ -121,3 +133,6 @@ Date.prototype.addDays = function(days) {
     date.setDate(date.getDate() + days);
     return date;
 }; 
+Date.prototype.normalize = function(){ 
+	return this.toString().normalize();
+};
