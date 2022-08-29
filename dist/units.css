@@ -1442,6 +1442,50 @@ html,body,*,form,form * {
 			align-items:center;
 		}
 
+	/* Loader */
+		.unit-loader {
+			background:var(--background-modal);
+			position:fixed;
+			left:0;
+			right:0;
+			top:0;
+			bottom:0;
+			display:flex;
+			flex-direction:column;
+			justify-content:center;
+			align-items:center;
+			transition:0.3s ease;
+			opacity:1;
+			pointer-events:all;
+			z-index:1000000000000000000;
+			color:var(--text-primary)
+		}
+			.unit-loader b {
+				display:block;
+				margin-bottom:10px
+			}
+			.unit-loader span {
+				display:block;
+				margin-bottom:10px
+			}
+			.unit-loader span:empty {
+				display:none
+			}
+			.unit-loader .unit-loading-bar {
+				display:block;
+				height:6px;
+				width:100px;
+				border-radius:10px;
+				background:var(--background-component);
+			}
+				.unit-loader .unit-loading-bar .unit-loading-progress {
+					border-radius:inherit;
+					background:var(--primary);
+					transition:0.3s ease;
+					height:100%;
+					width:0;
+				}
+
 @media only screen and (max-width:480px), only screen and (max-device-width:480px) {
 	.unit-form-row {
 		flex-direction:column;

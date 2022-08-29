@@ -88,7 +88,7 @@ $.fn.bridge = function(path,options){
                 	var pct = ((evt.loaded/evt.total)*100);
                     $(this).trigger('progress',pct);
 	                if(settings.loader&&hasFiles){
-	                	loader.trigger('update-progress',[pct]);
+	                	loader.trigger('progress',[pct]);
 					}
                 },false);
                 return xhr;
@@ -402,11 +402,16 @@ window.Units = {
 		Units.loader(code);
 		location.reload();
 	},
-    loader:function(code,withProgress){
-      	var loader=$('<div class="unit-loading">'+(withProgress?'<div class="unit-loading-progress"></div>':'')+'<b class="fa fa-circle-notch fa-spin fa-3x fa-fw"></b><span>'+(code?code:'')+'</span></div>').on('update-progress',function(e,progress){
-      		
+    loader:function(loadingMessage){
+      	return [
+      		'<div class="unit-loader">',
+				'<b class="fa fa-circle-notch fa-spin fa-3x fa-fw"></b>',
+				'<span>',loadingMessage,'</span>',
+				'<div class="unit-loading-bar"><div class="unit-loading-progress"></div></div>',
+			'</div>'
+      	].$().on('progress',function(e,progress){
+      		$(this).find('.unit-loading-progress').css('width',progress+'%');
       	}).appendTo('body');
-      	return loader;
     },
 	translate:function(c){
 		c = (c+'').toString();
