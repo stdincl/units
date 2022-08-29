@@ -352,6 +352,7 @@ window.Units = {
 		window.lang = window.lang?window.lang:{};
 		return (window.lang[c]?window.lang[c]:c).normalize();
 	},
+	bridgeUnits:true,
 	bridge:function(path,data,options){
 		/* 
 			Options 
@@ -368,7 +369,7 @@ window.Units = {
 			headers:{}
 		},options);
 		data = (typeof data==='object' && !Array.isArray(data) && data!==null)?data:{};
-		var isSendedByForm = (typeof this).toLowerCase()!=='function';
+		var isSendedByForm = this.bridgeUnits?false:true;
 		var target = isSendedByForm?$(this):$('<div></div>');
 		var formDataCollector = isSendedByForm?new FormData(this):new FormData();
 		$.each(data,function(k,d){
@@ -401,7 +402,7 @@ window.Units = {
 					request.setRequestHeader('Auth',credentialKey+' ' + Units.credentials[credentialKey]);
 				});
 				Object.keys(settings.headers).forEach((headerKey)=>{
-					request.setRequestHeader('Auth',headerKey+' ' + settings.headers[headerKey]);
+					request.setRequestHeader(headerKey,settings.headers[headerKey]);
 				});
 			    request.withCredentials = 'true';
 			},
