@@ -1282,7 +1282,7 @@ html,body,*,form,form * {
 	/* Simple data field */
 		.unit-field {
 			flex:1;
-			padding:15px;
+			padding:15px 0;
 		}
 		.unit-field:first-child {
 			padding-top:0;
