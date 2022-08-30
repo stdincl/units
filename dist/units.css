@@ -20,7 +20,7 @@
 	--text-secundary:#959599;
 	--text-disabled:#c8c8c8;
 
-	--primary:#01a3ff;
+	--primary:#127bfb;
 	--primary-hover:#1bacff;
 
 	--constructive:#0dcdaf;
@@ -302,11 +302,13 @@ html,body,*,form,form * {
 	/* Head */
 		.unit-head {
 			display:flex;
-			border-bottom:1px solid var(--border-light);
-			background:var(--background-component);
 			justify-content:space-between;
 			flex-direction:row;
 			height:60px;
+		}
+		.unit-column .unit-head {
+			border-bottom:1px solid var(--border-light);
+			background:var(--background-component);
 		}
 		.unit-head.unit-small {
 			height:36px;
@@ -391,6 +393,8 @@ html,body,*,form,form * {
 			justify-content:space-between;
 			flex-direction:row-reverse;
 			min-height:50px;
+		}
+		.unit-column .unit-foot {
 			border-top:1px solid var(--border-light);
 			background:var(--background-component);
 		}
@@ -1596,6 +1600,47 @@ html,body,*,form,form * {
 					transition:0.3s ease;
 					height:100%;
 					width:0;
+				}
+	/* Auth Form */
+		.unit-auth-view {
+			display:flex;
+			flex-direction:row;
+			flex:1;
+		}
+			.unit-auth-view .unit-auth-view-presentation,
+			.unit-auth-view .unit-auth-view-form {
+				display:flex;
+				flex-direction:column;
+			}
+			.unit-auth-view .unit-auth-view-presentation {
+				background:var(--primary) no-repeat center center;
+				background-size:cover;
+				flex:1;
+				flex-direction:column;
+				justify-content:space-between;
+			}
+				.unit-auth-view .unit-auth-view-presentation .unit-body {
+					justify-content:center;
+					align-items:center;
+				}
+			.unit-auth-view .unit-auth-view-form {
+				background:var(--background-component);
+				justify-content:center;
+				align-items:center;
+				flex:2;
+			}
+				.unit-auth-view .unit-auth-view-form > .unit-form {
+					max-width:340px;
+					width:80%;
+				}
+				.unit-auth-view .unit-auth-view-form > a {
+					display:block;
+					margin:10px;
+					font-size:12px;
+					color:var(--text-secundary);
+				}
+				.unit-auth-view .unit-auth-view-form > a:hover {
+					color:var(--text-primary);
 				}
 
 @media only screen and (max-width:480px), only screen and (max-device-width:480px) {
