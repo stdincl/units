@@ -241,6 +241,7 @@ window.Units = {
 		}
 		var formHtmlInput = '<input type="'+inputSettings.type+'" class="unit-input-component" />';
 		if(inputSettings.type=='hidden'){
+			formHtmlInput = $(formHtmlInput);
 			formHtmlInput.attr({
 				'name':inputSettings.name,
 				'placeholder':inputSettings.placeholder,
