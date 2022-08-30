@@ -278,14 +278,13 @@ window.Units = {
 		}
 		inputSettings.options.forEach((option)=>{
 			Units.option(option.value,option.text).appendTo(formInput.find('select'));
-			if(inputSettings.value==''){
-				inputSettings.value = option.value;
-			}
 		});
-		formInput.find('.unit-input-component').attr({
+		var formInputComponent = formInput.find('.unit-input-component');
+		formInputComponent.attr({
 			'name':inputSettings.name,
 			'placeholder':inputSettings.placeholder,
 		}).val(inputSettings.value);
+		formInputComponent.val(formInputComponent.val());
 		formInput.find('select,[type=file]').unitUpdateListeners();
 		if(requiresLabelLink){
 			var generationKey = 'unit-form-'+Date.now();
