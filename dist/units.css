@@ -37,7 +37,7 @@
 
 	--white:#ffffff;
 
-	--input-size:40px;
+	--input-size:50px;
 }
 
 /* Reset */
@@ -508,10 +508,11 @@ html,body,*,form,form * {
     			text-overflow:ellipsis;
 			}
 			.unit-input > i,
-			.unit-input > a {
+			.unit-input > a,
+			.unit-input > svg {
 				position:absolute;
 				bottom:0;
-				color:var(--text-primary-secundary);
+				color:var(--text-secundary);
 				height:var(--input-size);
 				width:var(--input-size);
 				display:flex;
@@ -519,15 +520,26 @@ html,body,*,form,form * {
 				align-items:center;
 				background:none !important;
 				border:none !important;
+				font-size:14px;
 			}
-			.unit-input > i {
+			.unit-input > i,
+			.unit-input > svg {
 				left:0;
 			}
-				.unit-input > i + * {
+			.unit-input > svg {
+				transform:scale(0.5);
+			}
+				.unit-input > svg * {
+					color:inherit;
+				}
+				.unit-input > i + *,
+				.unit-input > svg + * {
 					padding-left:var(--input-size);
 				}
 				.unit-input > i + button,
-				.unit-input > i + [type=submit] {
+				.unit-input > i + [type=submit],
+				.unit-input > svg + button,
+				.unit-input > svg + [type=submit] {
 					padding-left:15px;
 				}
 			.unit-input > a {
