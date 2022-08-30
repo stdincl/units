@@ -10,6 +10,7 @@
     "@editorjs/editorjs": "^2.25.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "animate.css": "^4.1.1",
+    "feather-icons": "^4.29.0",
     "gmap3": "^7.2.0",
     "inputmask": "^5.0.7",
     "jquery": "^3.6.0",
