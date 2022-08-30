@@ -439,4 +439,5 @@ window.Units = {
 };
 $(()=>{
 	$('.unit-input select,.unit-input [type=file]').unitUpdateListeners();
+	((typeof feather)!=='undefined')?feather.replace():null;
 });
