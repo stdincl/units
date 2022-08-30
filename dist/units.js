@@ -278,6 +278,9 @@ window.Units = {
 		}
 		inputSettings.options.forEach((option)=>{
 			Units.option(option.value,option.text).appendTo(formInput.find('select'));
+			if(inputSettings.value==''){
+				inputSettings.value = option.value;
+			}
 		});
 		formInput.find('.unit-input-component').attr({
 			'name':inputSettings.name,
