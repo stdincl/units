@@ -17,6 +17,7 @@
 	--border-radius-secundary:4px;
 
 	--text-primary:#18191a;
+	--text-contrast:#ffffff;
 	--text-secundary:#959599;
 	--text-disabled:#c8c8c8;
 
@@ -1574,11 +1575,11 @@ html,body,*,form,form * {
 			opacity:1;
 			pointer-events:all;
 			z-index:1000000000000000000;
-			color:var(--text-primary)
+			color:var(--text-contrast)
 		}
 			.unit-loader b {
 				display:block;
-				margin-bottom:10px
+				margin-bottom:10px;
 			}
 			.unit-loader span {
 				display:block;
