@@ -296,7 +296,7 @@ window.Units = {
 	},
 	form:function(){
 		let formRows = Array.from(arguments);
-		var unitForm = ['<div class="unit-form"></div>'].$();
+		var unitForm = ['<form class="unit-form"></form>'].$();
 		formRows = Array.isArray(formRows)?formRows:[];
 		formRows.forEach((formRowInputs)=>{
 			var formRow = ['<div class="unit-form-row"></div>'].$();
