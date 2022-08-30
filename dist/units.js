@@ -443,6 +443,7 @@ window.Units = {
 				loader.remove();
 			}
 		});
+		target.trigger('start');
 		return target;
 	}
 };
