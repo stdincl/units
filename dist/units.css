@@ -463,7 +463,7 @@ html,body,*,form,form * {
 				display:block;
 				color:var(--text-primary);
 				font-family:var(--font-family);
-				background:var(--background-element);
+				background:var(--background-component);
 				outline:none;
 				border:1px solid var(--border-light);
 				-webkit-appearance:none;
