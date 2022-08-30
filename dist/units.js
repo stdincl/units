@@ -239,8 +239,14 @@ window.Units = {
 				'<div class="unit-input ',inputSettings.custom,'"></div>'
 			].$();
 		}
-
 		var formHtmlInput = '<input type="'+inputSettings.type+'" class="unit-input-component" />';
+		if(inputSettings.type=='hidden'){
+			formHtmlInput.attr({
+				'name':inputSettings.name,
+				'placeholder':inputSettings.placeholder,
+			}).val(inputSettings.value);
+			return formHtmlInput;
+		}
 		var requiresExtraLabel = false;
 		var requiresLabelLink = false;
 		switch(inputSettings.type){
