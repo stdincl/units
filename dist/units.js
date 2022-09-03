@@ -343,12 +343,12 @@ window.Units = {
 		Units.loader(code);
 		location.reload();
 	},
-    loader:function(loadingMessage){
+    loader:function(showProgressBar){
+    	showProgressBar = showProgressBar?true:false;
       	return [
       		'<div class="unit-loader">',
 				'<b class="fa fa-circle-notch fa-spin fa-3x fa-fw"></b>',
-				'<span>',loadingMessage,'</span>',
-				'<div class="unit-loading-bar"><div class="unit-loading-progress"></div></div>',
+				(showProgressBar?'<div class="unit-loading-bar"><div class="unit-loading-progress"></div></div>':''),
 			'</div>'
       	].$().on('progress',function(e,progress){
       		$(this).find('.unit-loading-progress').css('width',progress+'%');
@@ -384,8 +384,9 @@ window.Units = {
 			});
 			this.settings.data = formDataCollector;
 		}
+		this.settings.hasFiles = Array.from(this.settings.data.values()).filter((value)=>value.name?true:false).length>0;
 		if(this.settings.loader){
-			this.loader = Units.loader();
+			this.settings.loaderElement = Units.loader(this.settings.hasFiles);
 		}
 		return new Promise((resolve,reject)=>{
 			const ajaxSetup = {
@@ -411,10 +412,9 @@ window.Units = {
 				},
 				xhr:()=>{
 	                var xhr = new window.XMLHttpRequest();
-					var hasFiles = Array.from(this.settings.data.values()).filter((value)=>value.name?true:false).length>0;
-					if(hasFiles && this.settings.loader){
+					if(this.settings.hasFiles && this.settings.loader){
 		                xhr.upload.addEventListener('progress',(evt)=>{
-			                this.loader.trigger('progress',[((evt.loaded/evt.total)*100)]);
+			                this.settings.loaderElement.trigger('progress',[((evt.loaded/evt.total)*100)]);
 		                },false);
 					}
 	                return xhr;
