@@ -35,11 +35,11 @@ $.fn.close = function(){
 };
 $.fn.bridge = function(path,options){
 	var args = arguments;
-	options = $.extend(Units.defaultBridgeOptions,options);
 	return new Promise((resolve,reject)=>{
 		this.each(function(i,f){
 			$(f).on('submit',function(e){
 				e.preventDefault(); 
+				var options = $.extend(Units.defaultBridgeOptions,options);
 				options.data = new FormData(this);
 				Units.bridge(path,options).then(resolve).catch(reject);
 				return false;
@@ -434,7 +434,7 @@ window.Units = {
 				reject(response.responseJSON);
 			}).always(()=>{
 				if(this.settings.loader){
-					this.loader.remove();
+					this.settings.loaderElement.remove();
 				}
 			});
 		}); 
