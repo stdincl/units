@@ -33,20 +33,17 @@ $.fn.unitUpdateListeners = function(){
 $.fn.close = function(){
 	return this.trigger('unit-modal-close');
 };
-$.fn.bridge = function(){
-	/* 
-		Options 
-			...Units.options
-		Events 
-			...Units.events
-	*/
+$.fn.bridge = function(path,options){
 	var args = arguments;
-	return this.each(function(i,f){
-		$(f).on('submit',function(e){
-			e.preventDefault(); 
-			Units.bridge.apply(this,args);
-			return false;
-		});
+	return new Promise((resolve,reject)=>{
+		this.each(function(i,f){
+			$(f).on('submit',function(e){
+				e.preventDefault(); 
+				options.data = new FormData(this);
+				Units.bridge(path,options).then(resolve).catch(reject);
+				return false;
+			});
+		})
 	});
 };
 $.fn.modal = function(options){
@@ -361,90 +358,84 @@ window.Units = {
 		window.lang = window.lang?window.lang:{};
 		return (window.lang[c]?window.lang[c]:c).normalize();
 	},
-	bridgeUnits:true,
-	bridge:function(path,data,options){
+	bridge:function(path,options){
 		/* 
 			Options 
 				loader: bool : Shows loader
-				headers: {}
-			Events 
-				done: on result
-				error: on error 400 || 500
-				end: on request ends
-				progress: on upload progress
+				method: POST GET PULL ... http method
+				headers: {},
+				data:{}
+			Returns Promise
 		*/
-		var settings = $.extend({
+		this.path = path;
+		this.settings = $.extend({
+			method:'POST',
 			loader:true,
-			headers:{}
+			headers:{},
+			data:{}
 		},options);
-		data = (typeof data==='object' && !Array.isArray(data) && data!==null)?data:{};
-		var isSendedByForm = this.bridgeUnits?false:true;
-		var target = isSendedByForm?$(this):$('<div></div>');
-		var formDataCollector = isSendedByForm?new FormData(this):new FormData();
-		$.each(data,function(k,d){
-			formDataCollector.append(k,d);
-		});
-		data = formDataCollector;
-		var hasFiles = false;
-		for(const value of data.values()){
-			if(value.name){
-				hasFiles = true;
-			}
+		if(!(this.settings.data instanceof FormData)){
+			this.settings.data = $.extend({},this.settings.data);
+			var formDataCollector = new FormData();
+			$.each(this.settings.data,function(k,d){
+				formDataCollector.append(k,d);
+			});
+			this.settings.data = formDataCollector;
 		}
-		if(settings.loader){
-			var loader = Units.loader();
+		if(this.settings.loader){
+			this.loader = Units.loader();
 		}
-		var requestPost = $.ajax({
-			type:'POST',
-			url:Units.server+'/bridge/'+path+'/',
-			data:data,
-			cache: false,
-		    contentType: false,
-		    processData: false,
-			beforeSend:(request)=>{
-			    request.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
-				request.setRequestHeader('cache-control', 'max-age=0');
-				request.setRequestHeader('expires', '0');
-				request.setRequestHeader('expires', 'Tue, 01 Jan 1981 1:00:00 GMT');
-				request.setRequestHeader('pragma', 'no-cache');
-				Object.keys(Units.credentials).forEach((credentialKey)=>{
-					request.setRequestHeader('Auth',credentialKey+' ' + Units.credentials[credentialKey]);
-				});
-				Object.keys(settings.headers).forEach((headerKey)=>{
-					request.setRequestHeader(headerKey,settings.headers[headerKey]);
-				});
-			    request.withCredentials = 'true';
-			},
-			xhr:()=>{
-                var xhr = new window.XMLHttpRequest();
-                xhr.upload.addEventListener('progress',(evt)=>{
-                	var pct = ((evt.loaded/evt.total)*100);
-                    target.trigger('progress',pct);
-	                if(settings.loader&&hasFiles){
-	                	loader.trigger('progress',[pct]);
+		return new Promise((resolve,reject)=>{
+			const ajaxSetup = {
+				type:this.settings.method,
+				url:Units.server+'/bridge/'+this.path+'/',
+				data:this.settings.data,
+				cache: false,
+			    contentType: false,
+			    processData: false,
+				beforeSend:(request)=>{
+				    request.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+					request.setRequestHeader('cache-control', 'max-age=0');
+					request.setRequestHeader('expires', '0');
+					request.setRequestHeader('expires', 'Tue, 01 Jan 1981 1:00:00 GMT');
+					request.setRequestHeader('pragma', 'no-cache');
+					Object.keys(Units.credentials).forEach((credentialKey)=>{
+						request.setRequestHeader('Auth',credentialKey+' ' + Units.credentials[credentialKey]);
+					});
+					Object.keys(this.settings.headers).forEach((headerKey)=>{
+						request.setRequestHeader(headerKey,this.settings.headers[headerKey]);
+					});
+				    request.withCredentials = 'true';
+				},
+				xhr:()=>{
+	                var xhr = new window.XMLHttpRequest();
+					var hasFiles = Array.from(this.settings.data.values()).filter((value)=>value.name?true:false).length>0;
+					if(hasFiles && this.settings.loader){
+		                xhr.upload.addEventListener('progress',(evt)=>{
+			                this.loader.trigger('progress',[((evt.loaded/evt.total)*100)]);
+		                },false);
 					}
-                },false);
-                return xhr;
-            },
-		}).done((response)=>{
-			target.trigger('done',[response]).trigger('end');
-		}).fail((response)=>{
-			if(!response.responseJSON){
-				response = {
-					responseJSON:{
-						error:'.service-unavailable',
-						error_code:Units.translate('.service-unavailable')
-					}
-				};
-			}
-			target.trigger('error',[response.responseJSON.error,response.responseJSON.error_code]).trigger('end');
-		}).always(()=>{
-			if(settings.loader){
-				loader.remove();
-			}
-		});
-		target.trigger('start');
-		return target;
+	                return xhr;
+	            },
+			};
+			$.ajax(ajaxSetup).done((response)=>{
+				resolve(response);
+			}).fail((response)=>{ 
+				if(!response.responseJSON){
+					response = {
+						responseJSON:{
+							error:'.service-unavailable',
+							error_code:Units.translate('.service-unavailable')
+						}
+					};
+				}
+				reject(response.responseJSON);
+			}).always(()=>{
+				if(this.settings.loader){
+					this.loader.remove();
+				}
+			});
+		}); 
 	}
 };
 $(()=>{
