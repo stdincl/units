@@ -35,6 +35,7 @@ $.fn.close = function(){
 };
 $.fn.bridge = function(path,options){
 	var args = arguments;
+	options = $.extend(Units.defaultBridgeOptions,options);
 	return new Promise((resolve,reject)=>{
 		this.each(function(i,f){
 			$(f).on('submit',function(e){
@@ -358,6 +359,12 @@ window.Units = {
 		window.lang = window.lang?window.lang:{};
 		return (window.lang[c]?window.lang[c]:c).normalize();
 	},
+	defaultBridgeOptions:{
+		method:'POST',
+		loader:true,
+		headers:{},
+		data:{}
+	};
 	bridge:function(path,options){
 		/* 
 			Options 
@@ -368,12 +375,7 @@ window.Units = {
 			Returns Promise
 		*/
 		this.path = path;
-		this.settings = $.extend({
-			method:'POST',
-			loader:true,
-			headers:{},
-			data:{}
-		},options);
+		this.settings = $.extend(Units.defaultBridgeOptions,options);
 		if(!(this.settings.data instanceof FormData)){
 			this.settings.data = $.extend({},this.settings.data);
 			var formDataCollector = new FormData();
