@@ -364,7 +364,7 @@ window.Units = {
 		loader:true,
 		headers:{},
 		data:{}
-	};
+	},
 	bridge:function(path,options){
 		/* 
 			Options 
