@@ -38,10 +38,10 @@ $.fn.bridge = function(path,options){
 	return new Promise((resolve,reject)=>{
 		this.each(function(i,f){
 			$(f).on('submit',function(e){
-				e.preventDefault(); 
-				var options = $.extend(Units.defaultBridgeOptions,options);
-				options.data = new FormData(this);
-				Units.bridge(path,options).then(resolve).catch(reject);
+				e.preventDefault();
+				var optionsOverride = $.extend(Units.defaultBridgeOptions,options);
+				optionsOverride.data = new FormData(this);
+				Units.bridge(path,optionsOverride).then(resolve).catch(reject);
 				return false;
 			});
 		})
