@@ -33,19 +33,27 @@ $.fn.unitUpdateListeners = function(){
 $.fn.close = function(){
 	return this.trigger('unit-modal-close');
 };
+const BridePromisePlaceholder = function(){
+	this.thens = [];
+	this.catchs = [];
+	this.finallys = [];
+	this.then = function(fn){ this.thens.push(fn); return this; };
+	this.catch = function(fn){ this.catchs.push(fn); return this; };
+	this.finally = function(fn){ this.finallys.push(fn); return this; };
+};
 $.fn.bridge = function(path,options){
-	var args = arguments;
-	return new Promise((resolve,reject)=>{
-		this.each(function(i,f){
-			$(f).on('submit',function(e){
-				e.preventDefault();
-				var optionsOverride = $.extend(Units.defaultBridgeOptions,options);
-				optionsOverride.data = new FormData(this);
-				Units.bridge(path,optionsOverride).then(resolve).catch(reject);
-				return false;
-			});
-		})
+	var bridge = new BridePromisePlaceholder();
+	$(this).on('submit',function(e){
+		e.preventDefault();
+		var optionsOverride = $.extend(Units.defaultBridgeOptions,options);
+		optionsOverride.data = new FormData(this);
+		var connection = Units.bridge(path,optionsOverride);
+		bridge.thens.forEach((fn)=>connection.then(fn));
+		bridge.catchs.forEach((fn)=>connection.catch(fn));
+		bridge.finallys.forEach((fn)=>connection.finally(fn));
+		return false;
 	});
+	return bridge;
 };
 $.fn.modal = function(options){
 	/* 
