@@ -31,7 +31,7 @@ $.fn.unitUpdateListeners = function(){
 	});
 };
 $.fn.close = function(){
-	return this.trigger('unit-modal-close');
+	return this.trigger('units-modal-close');
 };
 const BridePromisePlaceholder = function(){
 	this.thens = [];
@@ -65,62 +65,27 @@ $.fn.modal = function(options){
 	var settings = $.extend({},options);
 	return this.each((i,element)=>{
 		var w = [
-			'<div class="unit-modal unit-disabled">',
-				'<div class="unit-modal-content unit-modal-content-placeholder">',
+			'<div class="units-modal units-disabled">',
+				'<div class="units-modal-content units-modal-content-placeholder">',
 				'</div>',
 			'</div>'
-		].$().on('unit-modal-show',function(){
-			$(this).find('.unit-modal-content-placeholder > *').trigger('show');
+		].$().on('units-modal-show',function(){
+			$(this).find('.units-modal-content-placeholder > *').trigger('show');
 			setTimeout(()=>{
-				$(this).removeClass('unit-disabled');
+				$(this).removeClass('units-disabled');
 			},2);
-		}).on('unit-modal-hide',function(){
-			$(this).find('.unit-modal-content-placeholder > *').trigger('hide');
-			$(this).addClass('unit-disabled');
-		}).on('unit-modal-close',function(){
-			$(this).addClass('unit-disabled');
+		}).on('units-modal-hide',function(){
+			$(this).find('.units-modal-content-placeholder > *').trigger('hide');
+			$(this).addClass('units-disabled');
+		}).on('units-modal-close',function(){
+			$(this).addClass('units-disabled');
 			setTimeout(()=>{
-				$(this).find('.unit-modal-content-placeholder > *').trigger('close').remove();
+				$(this).find('.units-modal-content-placeholder > *').trigger('close').remove();
 			},300);
 		});
-		$(element).appendTo(w.find('.unit-modal-content-placeholder'));
+		$(element).appendTo(w.find('.units-modal-content-placeholder'));
 		w.appendTo('body');
-		w.trigger('unit-modal-show');
-	});
-};
-$.fn.window = function(options){
-	/* 
-		Options:
-			...$.fn.modal
-			title : Window title : defaults '',
-			closable : If windows can be closed with the X corner button : default true
-		Events 
-			...$.fn.modal
-	*/
-	var settings = $.extend({
-		title:'',
-		closable:true
-	},options);
-	return this.each((i,element)=>{
-		var w = [
-			'<div class="unit-card">',
-				'<div class="unit-head">',
-					'<div class="unit-heading">',
-						'<label>',Units.translate(settings.title),'</label>',
-					'</div>',
-					(settings.closable?'<a class="unit-icon unit-modal-close"><i class="fa fa-times"></i></a>':''),
-				'</div>',
-				'<div class="unit-body">',
-					'<div class="unit-wrap unit-modal-content-placeholder"></div>',
-				'</div>',
-			'</div>'
-		].$();
-		w.modal(options).find('.unit-modal-close').on('click',function(e){
-			e.preventDefault();
-			w.close();
-		});
-		$(element).appendTo(w.find('.unit-modal-content-placeholder'));
-		return w;
+		w.trigger('units-modal-show');
 	});
 };
 window.Units = {
@@ -232,10 +197,10 @@ window.Units = {
 		},rowInputSettings);
 		if(inputSettings.type==''){
 			return [
-				'<div class="unit-input ',inputSettings.custom,'"></div>'
+				'<div class="units-input ',inputSettings.custom,'"></div>'
 			].$();
 		}
-		var formHtmlInput = '<input type="'+inputSettings.type+'" class="unit-input-component" />';
+		var formHtmlInput = '<input type="'+inputSettings.type+'" class="units-input-component" />';
 		if(inputSettings.type=='hidden'){
 			formHtmlInput = $(formHtmlInput);
 			formHtmlInput.attr({
@@ -248,14 +213,14 @@ window.Units = {
 		var requiresLabelLink = false;
 		switch(inputSettings.type){
 			case 'select':
-				formHtmlInput = '<select class="unit-input-component"></select>';
+				formHtmlInput = '<select class="units-input-component"></select>';
 				requiresExtraLabel = true;
 			break;
 			case 'button':
-				formHtmlInput = '<button class="unit-input-component"></button>';
+				formHtmlInput = '<button class="units-input-component"></button>';
 			break;
 			case 'textarea':
-				formHtmlInput = '<textarea class="unit-input-component"></textarea>';
+				formHtmlInput = '<textarea class="units-input-component"></textarea>';
 			break;
 			case 'file':
 				requiresExtraLabel = true;
@@ -270,19 +235,19 @@ window.Units = {
 			break;
 		}
 		var formInput = [
-			'<div class="unit-input ',inputSettings.custom,'">',
+			'<div class="units-input ',inputSettings.custom,'">',
 				(inputSettings.label!=''?('<label>'+inputSettings.label+'</label>'):''),
 				formHtmlInput,
-				(requiresExtraLabel?'<label class="unit-input-override-label"></label>':''),
+				(requiresExtraLabel?'<label class="units-input-override-label"></label>':''),
 			'</div>'
 		].$();
 		if(inputSettings.type=='submit'){
-			formInput.addClass('unit-primary');
+			formInput.addClass('units-primary');
 		}
 		inputSettings.options.forEach((option)=>{
 			Units.option(option.value,option.text).appendTo(formInput.find('select'));
 		});
-		var formInputComponent = formInput.find('.unit-input-component');
+		var formInputComponent = formInput.find('.units-input-component');
 		formInputComponent.attr({
 			'name':inputSettings.name,
 			'placeholder':inputSettings.placeholder,
@@ -290,21 +255,21 @@ window.Units = {
 		formInputComponent.val(formInputComponent.val());
 		formInput.find('select,[type=file]').unitUpdateListeners();
 		if(requiresLabelLink){
-			var generationKey = 'unit-form-'+Date.now();
+			var generationKey = 'units-form-'+Date.now();
 			while($('#'+generationKey).length>0){
-				generationKey = 'unit-form-'+Date.now()+'-'+Math.round(Math.random()*1000000000);
+				generationKey = 'units-form-'+Date.now()+'-'+Math.round(Math.random()*1000000000);
 			}
-			formInput.find('.unit-input-component').attr('id',generationKey);
-			formInput.find('.unit-input-override-label').attr('for',generationKey).text(inputSettings.placeholder);
+			formInput.find('.units-input-component').attr('id',generationKey);
+			formInput.find('.units-input-override-label').attr('for',generationKey).text(inputSettings.placeholder);
 		}
 		return formInput;
 	},
 	form:function(){
 		let formRows = Array.from(arguments);
-		var unitForm = ['<form class="unit-form"></form>'].$();
+		var unitForm = ['<form class="units-form"></form>'].$();
 		formRows = Array.isArray(formRows)?formRows:[];
 		formRows.forEach((formRowInputs)=>{
-			var formRow = ['<div class="unit-form-row"></div>'].$();
+			var formRow = ['<div class="units-fields"></div>'].$();
 			formRowInputs.forEach((rowInputSettings)=>{
 				Units.formInput(rowInputSettings).appendTo(formRow);
 			});
@@ -344,12 +309,12 @@ window.Units = {
     loader:function(showProgressBar){
     	showProgressBar = showProgressBar?true:false;
       	return [
-      		'<div class="unit-loader">',
+      		'<div class="units-loader">',
 				'<b class="fa fa-circle-notch fa-spin fa-3x fa-fw"></b>',
-				(showProgressBar?'<div class="unit-loading-bar"><div class="unit-loading-progress"></div></div>':''),
+				(showProgressBar?'<div class="units-loading-bar"><div class="units-loading-progress"></div></div>':''),
 			'</div>'
       	].$().on('progress',function(e,progress){
-      		$(this).find('.unit-loading-progress').css('width',progress+'%');
+      		$(this).find('.units-loading-progress').css('width',progress+'%');
       	}).appendTo('body');
     },
 	translate:function(c){
@@ -439,6 +404,6 @@ window.Units = {
 	}
 };
 $(()=>{
-	$('.unit-input select,.unit-input [type=file]').unitUpdateListeners();
+	$('.units-input select,.units-input [type=file]').unitUpdateListeners();
 	((typeof feather)!=='undefined')?feather.replace():null;
 });

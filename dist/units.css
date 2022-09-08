@@ -10,6 +10,8 @@
 	--app-air:30px;
 	--app-spacing:6px;
 
+	--background-modal:#18191a88;
+
 	--font-family:Manrope,BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
 	--border-color-strong:#525962;
@@ -70,6 +72,42 @@ html,body,*,form,form * {
 .datepicker-container {
     z-index:100000000000000000000 !important;
 }
+
+/* Modal */
+	.units-modal {
+		background:var(--background-modal);
+		position:fixed;
+		left:0;
+		right:0;
+		top:0;
+		bottom:0;
+		display:block;
+		transition:0.3s ease;
+		opacity:1;
+		pointer-events:all;
+		z-index:1000000000000;
+	}
+		.units-modal.unit-disabled {
+			opacity:0;
+			pointer-events:none;
+		}
+		.units-modal .units-modal-content {
+			position:absolute;
+		    left:0;
+		    right:0;
+		    top:0;
+		    bottom:0;
+		    justify-content:center;
+		    align-items:center;
+		    display:inline-grid;
+		    flex-direction:column;
+		    overflow:auto;
+		    padding:80px;
+		    box-sizing:border-box;
+		}
+		.units-modal .units-modal-content > * {
+			box-shadow:0 4px 16px var(--background-shadow-color);
+		}
 
 .units-ui,
 .units-ui body {
