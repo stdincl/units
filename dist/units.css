@@ -339,12 +339,18 @@ html,body,*,form,form * {
 .units-mini-card {
 	border:1px solid var(--border-color);
 	border-radius:var(--border-radius);
-	margin-top:var(--item-air);
+	margin:var(--item-air) 0;
 	background:var(--app);
 	display:block;
 	position:relative;
 	padding:10px;
 }
+	.units-mini-card:first-child {
+		margin-top:0;
+	}
+	.units-mini-card:last-child {
+		margin-bottom:0;
+	}
 	.units-mini-card > i {
 		display:block;
 		line-height:0;
