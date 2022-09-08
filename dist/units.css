@@ -10,7 +10,8 @@
 	--app-air:30px;
 	--app-spacing:6px;
 
-	--background-modal:#18191a88;
+	--modal-background:#18191a88;
+	--modal-loader-color:#ffffff;
 
 	--font-family:Manrope,BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
@@ -73,9 +74,51 @@ html,body,*,form,form * {
     z-index:100000000000000000000 !important;
 }
 
+/* Loader */
+	.units-loader {
+		background:var(--modal-background);
+		position:fixed;
+		left:0;
+		right:0;
+		top:0;
+		bottom:0;
+		display:flex;
+		flex-direction:column;
+		justify-content:center;
+		align-items:center;
+		transition:0.3s ease;
+		opacity:1;
+		pointer-events:all;
+		z-index:1000000000000000000;
+		color:var(--modal-loader-color)
+	}
+		.units-loader b {
+			margin-bottom:10px;
+		}
+		.units-loader span {
+			display:block;
+			margin-bottom:10px
+		}
+		.units-loader span:empty {
+			display:none
+		}
+		.units-loader .units-loading-bar {
+			height:4px;
+			width:100px;
+			border-radius:10px;
+			background:var(--background-component);
+		}
+			.units-loader .units-loading-bar .units-loading-progress {
+				border-radius:inherit;
+				background:var(--primary);
+				transition:0.3s ease;
+				height:100%;
+				width:0;
+			}
+
 /* Modal */
 	.units-modal {
-		background:var(--background-modal);
+		background:var(--modal-background);
 		position:fixed;
 		left:0;
 		right:0;
