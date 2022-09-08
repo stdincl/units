@@ -80,7 +80,7 @@ $.fn.modal = function(options){
 		}).on('units-modal-close',function(){
 			$(this).addClass('units-disabled');
 			setTimeout(()=>{
-				$(this).find('.units-modal-content-placeholder > *').trigger('close').remove();
+				w.trigger('close').remove();
 			},300);
 		});
 		$(element).appendTo(w.find('.units-modal-content-placeholder'));
@@ -105,7 +105,7 @@ window.Units = {
 				title
 				message
 			Events 
-				close:Window closes
+				[$.fn.modal..]events
 		*/
 		var w = [
 			'<div class="units-window">',
@@ -128,7 +128,6 @@ window.Units = {
 		].$().modal();
 		w.find('.units-modal-close-button').on('click',function(e){
 			e.preventDefault();
-			w.trigger('close');
 			w.close();
 		}).get(0).focus()
 	},
@@ -140,7 +139,7 @@ window.Units = {
 				title : Window title : default 'Confirmar'
 				message : Window message : default ''
 			confirm:Events 
-				close: on window closes (removed from DOM),
+				[$.fn.modal..]events
 				resolve(e:event, accept:bool): on resolve message
 				cancel: on cancel message
 				accept: on accept message

@@ -87,7 +87,7 @@ html,body,*,form,form * {
 		pointer-events:all;
 		z-index:1000000000000;
 	}
-		.units-modal.unit-disabled {
+		.units-modal.units-disabled {
 			opacity:0;
 			pointer-events:none;
 		}
