@@ -310,13 +310,6 @@ html,body,*,form,form * {
 	    background:var(--border-color);
 	    margin-left:-2px;
 	}
-	.units-tags b.urgency-1 { border-color:#7187ff; color:#7187ff }
-	.units-tags b.urgency-2 { border-color:#eae29d; color:#eae29d }
-	.units-tags b.urgency-3 { border-color:#ea628d; color:#ea628d }
-
-	.units-tags b.status-1 { border-color:#71ff93; color:#71ff93 }
-	.units-tags b.status-2 { border-color:#fff498; color:#fff498 }
-	.units-tags b.status-3 { border-color:#ff98b9; color:#ff98b9 }
 
 .units-scroll {
 	position:absolute;
