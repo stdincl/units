@@ -6,6 +6,7 @@
 	--app-primary:#2d333b;
 	--app-secundary:#22272e;
 	--app-secundary-hover:#262a33;
+	--app-component:#dce3e8;
 
 	--app-air:30px;
 	--app-spacing:6px;
@@ -1442,7 +1443,7 @@ html,body,*,form,form * {
 	    width:16px;
 	    height:16px; 
 	    box-sizing:border-box;
-	    background:var(--background-component);
+	    background:var(--app-component);
 	    transition:0.3s;
 	    display:flex;
 	    align-items:center;
@@ -1456,7 +1457,7 @@ html,body,*,form,form * {
 	}
 	.units-input > [type=checkbox] + label:before {
 		content:"✓"; 
-	    border-radius:var(--border-radius-secundary);
+	    border-radius:var(--border-radius);
 	}
 		.units-input > [type=checkbox]:checked + label:before {
 		    font-size:14px;
