@@ -1468,7 +1468,7 @@ html,body,*,form,form * {
 	    border-radius:50%;
 	}
 		.units-input > [type=radio]:checked + label:before {
-		    font-size:14px;
+		    font-size:11px;
 		    color:var(--primary);
 		}
 
