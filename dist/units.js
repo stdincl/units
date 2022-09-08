@@ -130,101 +130,91 @@ window.Units = {
 		var settings = $.extend({
 			title:'Mensaje',
 			message:''
-		},options);
+		},typeof options==='string'?{
+			message:options
+		}:options);
 		/* 
+			Returns: 
+				close: on window closes (removed from DOM),
 			Options:
 				title
 				message
 			Events 
-				close: on window closes (removed from DOM),
-				hide: on window is hidded (not removed from DOM),
-				show: on window is showed
+				close:Window closes
 		*/
 		var w = [
-			'<div class="unit-card">',
-				'<div class="unit-head">',
-					'<div class="unit-heading">',
-						'<label>',Units.translate(settings.title),'</label>',
+			'<div class="units-window">',
+				'<div class="units-head">',
+					'<div class="units-title">',
+						Units.translate(settings.title),
 					'</div>',
 				'</div>',
-				'<div class="unit-body">',
-					'<div class="unit-wrap">',
-						'<p>',Units.translate(settings.message).nl2br(),'</p>',
+				'<div class="units-body">',
+					'<div class="units-wrap">',
+						'<div class="units-data"><p>',Units.translate(settings.message).nl2br(),'</p></div>',
 					'</div>',
 				'</div>',
-				'<div class="unit-foot">', 
-					'<div class="unit-actions unit-actions-inline unit-small">',
-						'<div>',
-							'<a class="unit-primary unit-modal-close-button">Entendido</a>',
-						'</div>',
-					'</div>',  
+				'<div class="units-foot">',
+					'<div class="units-actions units-inline">',
+						'<div><a href="#" class="units-primary units-modal-close-button">Entendido</a></div>',
+					'</div>',
 				'</div>',
 			'</div>'
 		].$().modal();
-		w.find('.unit-modal-close-button').on('click',function(e){
+		w.find('.units-modal-close-button').on('click',function(e){
 			e.preventDefault();
+			w.trigger('close');
 			w.close();
-		});
-		return w;
+		}).get(0).focus()
 	},
 	confirm:function(options){
 		/* 
+			Returns: 
+				DOM Element
 			confirm:Options
 				title : Window title : default 'Confirmar'
 				message : Window message : default ''
-				cancelIsDestructive : Cancel button causes destructive action : default false
-				cancelIsConstructive : Cancel button causes constructive action : default false
-				acceptIsDestructive : Accept button causes destructive action : default false
-				acceptIsConstructive : Accept button causes constructive action : default false
 			confirm:Events 
 				close: on window closes (removed from DOM),
-				hide: on window is hidded (not removed from DOM),
-				show: on window is showed
-				resolve: when message is canceled or canceled, boolean param is passed (e,accepted)=>{}
-				cancel: when message is canceled
-				accept: when message is accepted
+				resolve(e:event, accept:bool): on resolve message
+				cancel: on cancel message
+				accept: on accept message
 		*/
 		var settings = $.extend({
 			title:'Confirmar',
 			message:'',
-			acceptIsDestructive:false,
-			cancelIsDestructive:false,
-			acceptIsConstructive:false,
-			cancelIsConstructive:false
-		},options);
-		var cancelExtraClass = settings.cancelIsDestructive?'unit-destructive':(settings.cancelIsConstructive?'unit-constructive':'');
-		var acceptExtraClass = settings.acceptIsDestructive?'unit-destructive':(settings.acceptIsConstructive?'unit-constructive':' unit-primary');
+			accept:'Aceptar',
+			cancel:'Cancelar'
+		},typeof options==='string'?{
+			message:options
+		}:options);
 		var w = [
-			'<div class="unit-card">',
-				'<div class="unit-head">',
-					'<div class="unit-heading">',
-						'<label>',Units.translate(settings.title),'</label>',
+			'<div class="units-window">',
+				'<div class="units-head">',
+					'<div class="units-title">',
+						Units.translate(settings.title),
 					'</div>',
 				'</div>',
-				'<div class="unit-body">',
-					'<div class="unit-wrap">',
-						'<p>',Units.translate(settings.message).nl2br(),'</p>',
+				'<div class="units-body">',
+					'<div class="units-wrap">',
+						'<div class="units-data"><p>',Units.translate(settings.message).nl2br(),'</p></div>',
 					'</div>',
 				'</div>',
-				'<div class="unit-foot">', 
-					'<div class="unit-actions unit-actions-inline unit-small">',
-						'<div>',
-							'<a class="unit-modal-accept-button ',acceptExtraClass,'">Aceptar</a>',
-						'</div>',
-					'</div>',  
-					'<div class="unit-actions unit-actions-inline unit-small">',
-						'<div>',
-							'<a class="unit-modal-cancel-button ',cancelExtraClass,'">Cancelar</a>',
-						'</div>',
-					'</div>',  
+				'<div class="units-foot">',
+					'<div class="units-actions units-inline">',
+						'<div><a href="#" class="units-primary  units-modal-accept-button">',settings.accept,'</a></div>',
+					'</div>',
+					'<div class="units-actions units-inline">',
+						'<div><a href="#" class="units-modal-cancel-button">',settings.cancel,'</a></div>',
+					'</div>',
 				'</div>',
-			'</div>',
+			'</div>'
 		].$().modal();
-		w.find('.unit-modal-cancel-button').on('click',function(e){
+		w.find('.units-modal-cancel-button').on('click',function(e){
 			e.preventDefault();
 			w.trigger('cancel').trigger('resolve',[false]).close();
-		});
-		w.find('.unit-modal-accept-button').on('click',function(e){
+		}).get(0).focus();;
+		w.find('.units-modal-accept-button').on('click',function(e){
 			e.preventDefault();
 			w.trigger('accept').trigger('resolve',[true]).close();
 		});
