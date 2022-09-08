@@ -107,7 +107,7 @@ html,body,*,form,form * {
 			height:4px;
 			width:100px;
 			border-radius:10px;
-			background:var(--background-component);
+			background:var(--app-component);
 		}
 			.units-loader .units-loading-bar .units-loading-progress {
 				border-radius:inherit;
