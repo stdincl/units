@@ -21,7 +21,14 @@ String.prototype.toDate = function(){
 		d[1] = isNaN(d[1])?0:(d[1]-1);
 		d[2] = isNaN(d[2])?0:d[2]; 
 
-	return new Date(d[0],d[1],d[2]);
+	var isInvalidDate = (
+		d[0]==0
+		||
+		d[1]==0
+		||
+		d[2]==0
+	);
+	return isInvalidDate?new Date():new Date(d[0],d[1],d[2]);
 };
 String.prototype.toURLFriendly = function(){
 	return this.toLowerCase().replaceAll('á','a').replaceAll('é','e').replaceAll('í','i').replaceAll('ó','o').replaceAll('ú','u').replaceAll('ñ','n').replaceAll('ç','c').replaceAll(' ','-').replace(/[^a-z0-9-]/gi, '');
