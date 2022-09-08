@@ -1626,8 +1626,19 @@ html,body,*,form,form * {
 .units-lock {
 	position:relative;
 	pointer-events:none;
+	overflow:hidden;
 }
 	.units-lock:before {
+		display:block;
+		content:"";
+		position:absolute;
+		left:0;
+		right:0;
+		top:0;
+		bottom:0;
+		background:var(--modal-background);
+	}
+	.units-lock:after {
 		-moz-osx-font-smoothing:grayscale;
 	    -webkit-font-smoothing:antialiased;
 	    display:inline-block;
@@ -1649,7 +1660,7 @@ html,body,*,form,form * {
 	    position:absolute;
 	    z-index:10000000;
 	    font-weight:900;
-	    color:var(--text-contrast);
+	    color:var(--text-primary);
 	}
 
 .units-user-card {
