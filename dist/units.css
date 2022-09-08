@@ -1393,8 +1393,8 @@ html,body,*,form,form * {
 	}
 	.units-input > select + label:after {
 		content:"";
-		border-right:1px solid var(--border-strong);
-	    border-bottom:1px solid var(--border-strong);
+		border-right:1px solid var(--border-color);
+	    border-bottom:1px solid var(--border-color);
 	    width:7px;
 	    height:7px;
 	    transform:rotate(45deg);
@@ -1405,7 +1405,7 @@ html,body,*,form,form * {
 	}
 	.units-input > [type=file] + label:after {
 		text-transform:uppercase;
-	    color:var(--border-strong);
+	    color:var(--border-color);
 		content:"+";
 		font-size:18px;
 	    margin-left:10px;
@@ -1586,8 +1586,8 @@ html,body,*,form,form * {
 		.units-pages > a:before {
 			display:block;
 		    content:"";
-		    border-right:1px solid var(--border-strong);
-		    border-bottom:1px solid var(--border-strong);
+		    border-right:1px solid var(--border-color);
+		    border-bottom:1px solid var(--border-color);
 		    width:7px;
 		    height:7px;
 		    position:relative;
