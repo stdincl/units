@@ -129,7 +129,8 @@ window.Units = {
 		w.find('.units-modal-close-button').on('click',function(e){
 			e.preventDefault();
 			w.close();
-		}).get(0).focus()
+		}).get(0).focus();
+		return w;
 	},
 	confirm:function(options){
 		/* 
