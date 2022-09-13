@@ -64,26 +64,28 @@ $.fn.modal = function(options){
 	*/
 	var settings = $.extend({},options);
 	return this.each((i,element)=>{
+		var _self = $(element);
 		var w = [
 			'<div class="units-modal units-disabled">',
 				'<div class="units-modal-content units-modal-content-placeholder">',
 				'</div>',
 			'</div>'
 		].$().on('units-modal-show',function(){
-			$(this).find('.units-modal-content-placeholder > *').trigger('show');
+			_self.trigger('show');
 			setTimeout(()=>{
 				$(this).removeClass('units-disabled');
 			},2);
 		}).on('units-modal-hide',function(){
-			$(this).find('.units-modal-content-placeholder > *').trigger('hide');
+			_self.trigger('hide');
 			$(this).addClass('units-disabled');
 		}).on('units-modal-close',function(){
 			$(this).addClass('units-disabled');
+			_self.trigger('close');
 			setTimeout(()=>{
-				w.trigger('close').remove();
+				w.remove();
 			},300);
 		});
-		$(element).appendTo(w.find('.units-modal-content-placeholder'));
+		_self.appendTo(w.find('.units-modal-content-placeholder'));
 		w.appendTo('body');
 		w.trigger('units-modal-show');
 	});
