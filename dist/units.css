@@ -1406,8 +1406,8 @@ html,body,*,form,form * {
 	}
 	.units-input > select + label:after {
 		content:"";
-		border-right:1px solid var(--border-color);
-	    border-bottom:1px solid var(--border-color);
+		border-right:1px solid var(--border-color-strong);
+	    border-bottom:1px solid var(--border-color-strong);
 	    width:7px;
 	    height:7px;
 	    transform:rotate(45deg);
@@ -1418,7 +1418,7 @@ html,body,*,form,form * {
 	}
 	.units-input > [type=file] + label:after {
 		text-transform:uppercase;
-	    color:var(--border-color);
+	    color:var(--border-color-strong);
 		content:"+";
 		font-size:18px;
 	    margin-left:10px;
@@ -1599,8 +1599,8 @@ html,body,*,form,form * {
 		.units-pages > a:before {
 			display:block;
 		    content:"";
-		    border-right:1px solid var(--border-color);
-		    border-bottom:1px solid var(--border-color);
+		    border-right:1px solid var(--border-color-strong);
+		    border-bottom:1px solid var(--border-color-strong);
 		    width:7px;
 		    height:7px;
 		    position:relative;
