@@ -1364,6 +1364,7 @@ html,body,*,form,form * {
 		background:none !important;
 		border:none !important;
 		font-size:14px;
+		z-index:1000;
 	}
 	.units-input > i,
 	.units-input > svg {
@@ -1429,6 +1430,13 @@ html,body,*,form,form * {
 		border-color:var(--text-primary);
 		color:var(--text-primary);
 	}
+
+
+	.units-input > a + select + label:after,
+	.units-input > a + [type=file] + label:after {
+		margin-right:20px;
+	}
+
 	.units-input > [type=checkbox],
 	.units-input > [type=radio] {
 		display:none;
@@ -1456,6 +1464,7 @@ html,body,*,form,form * {
 	    height:16px; 
 	    box-sizing:border-box;
 	    background:var(--app-component);
+	    color:var(--white);
 	    transition:0.3s;
 	    display:flex;
 	    align-items:center;
