@@ -673,6 +673,7 @@ html,body,*,form,form * {
 	transition:0.3s;
 	padding:calc(var(--app-air)*0.6) var(--app-air);
 	border-bottom:1px solid var(--border-color-light);
+	background:var(--app-secundary);
 }
 	.units-row:hover {
 		background:var(--app-dark);
